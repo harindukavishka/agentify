@@ -2,22 +2,28 @@
 
 ## Project Vision
 
-Agentify 是产品 Agent 化的一站式转型平台。一条命令将任何 OpenAPI spec 转化为可运行的 MCP Server。
+Agentify 是一个 **Agent Interface Compiler**——从一个 source of truth 编译出产品在 Agent 时代需要的所有接口格式（MCP Server, Skills, CLI, CLAUDE.md, .cursorrules, A2A Card 等）。
 
-**一句话定位:** "The Meta-Tool that makes every product Agent-Native."
+**Tagline:** "One command. Every agent speaks your product."
 
-**核心体验:** `npx agentify <openapi-url>` → 可运行的 MCP Server 项目
+**核心体验:** `npx agentify transform <openapi-url>` → 完整的 Agent 接口套件
+
+**产品成熟度目标:** 让任何 L1+ 产品一键升级到 L4（Agent-Native 全接口套件）
 
 ## Project Status
 
 - [x] 项目初始化
-- [x] 调研阶段（4 份报告）
+- [x] 调研阶段（4 份报告）→ `research/`
 - [x] 产品规划 v1 → `docs/product-plan.md`
 - [x] 七人专家评审 → `research/reviews/`
-- [x] 计划修订 → `research/reviews/SYNTHESIS.md`
-- [ ] **Phase 0.5: "One Command" MVP（1-2 周）** ← 当前
-- [ ] Phase 1: Enhancement（2-4 周）
-- [ ] Phase 2: Scale（4-8 周）
+- [x] 计划修订 v1 → `research/reviews/SYNTHESIS.md`
+- [x] 愿景 v2 探索（2 份 UX 研究 + 7 份愿景探索）
+- [x] **Vision v2 定稿** → `docs/vision-v2.md`
+- [ ] **Milestone 0: Foundation（第 1 周）** ← 当前
+- [ ] Milestone 1: Multi-Format MVP（第 2-3 周）
+- [ ] Milestone 2: Intelligence Layer（第 4-5 周）
+- [ ] Milestone 3: Self-Serve & Ecosystem（第 6-8 周）
+- [ ] Milestone 4: Scale & Enterprise（第 9-14 周）
 
 ## Key Decisions
 
@@ -32,6 +38,10 @@ Agentify 是产品 Agent 化的一站式转型平台。一条命令将任何 Ope
 | 2026-03-02 | **[修订] 分层生成策略** | Agent 科学家发现 context window 灾难 |
 | 2026-03-02 | **[修订] 移除 ts-morph** | 老派开发者：15MB 依赖，Handlebars 足够 |
 | 2026-03-02 | **[修订] 窗口期 6-9 月（非 12-18）** | 创业者调研发现云厂商已在行动 |
+| 2026-03-02 | **[v2] 定位升级：Agent Interface Compiler** | 不只是 MCP，而是全格式输出 |
+| 2026-03-02 | **[v2] 多格式输出（MCP+Skills+Docs+IDE rules）** | MCP+Skill 协同 +25% 任务完成率 |
+| 2026-03-02 | **[v2] 5 级产品成熟度模型（L0-L4）** | L4 目前不存在，Agentify 填补空白 |
+| 2026-03-02 | **[v2] Milestone 路线图（M0-M4，14 周）** | M0:MCP → M1:多格式 → M2:智能 → M3:自举 → M4:规模 |
 
 ## Key Research Findings
 
