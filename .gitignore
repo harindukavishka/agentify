@@ -8,3 +8,9 @@ coverage/
 *.log
 tmp/
 .turbo/
+
+# Private internal docs (never commit)
+docs/launch-content/
+docs/launch-playbook.md
+research/marketing/
+research/strategy/
