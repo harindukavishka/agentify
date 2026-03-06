@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/@agentify/cli"><img src="https://img.shields.io/npm/v/@agentify/cli?color=cb3837&logo=npm" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/agentify-cli"><img src="https://img.shields.io/npm/v/agentify-cli?color=cb3837&logo=npm" alt="npm"></a>
   <a href="https://github.com/koriyoshi2041/agentify/actions"><img src="https://img.shields.io/github/actions/workflow/status/koriyoshi2041/agentify/ci.yml?logo=github" alt="CI"></a>
   <a href="https://github.com/koriyoshi2041/agentify/blob/main/LICENSE"><img src="https://img.shields.io/github/license/koriyoshi2041/agentify" alt="MIT License"></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript"></a>
@@ -17,7 +17,7 @@
 Agentify transforms any OpenAPI specification into a complete suite of agent interfaces. Instead of manually building MCP servers, writing CLAUDE.md files, crafting agent skills, and configuring IDE rules separately, Agentify compiles them all from a single source of truth.
 
 ```bash
-npx @agentify/cli transform https://petstore.swagger.io/v2/swagger.json
+npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
 ```
 
 <!-- TODO: Replace with actual demo GIF recorded via VHS -->
@@ -67,13 +67,13 @@ OpenAPI Spec -----> +---> AGENTS.md
 
 ```bash
 # Transform any OpenAPI spec
-npx @agentify/cli transform https://petstore.swagger.io/v2/swagger.json
+npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
 
 # Specify output directory
-npx @agentify/cli transform ./my-api.yaml -o ./output
+npx agentify-cli transform ./my-api.yaml -o ./output
 
 # Override project name
-npx @agentify/cli transform https://api.example.com/openapi.json -n my-project
+npx agentify-cli transform https://api.example.com/openapi.json -n my-project
 ```
 
 **Output:**

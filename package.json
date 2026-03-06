@@ -1,5 +1,5 @@
 {
-  "name": "@agentify/cli",
+  "name": "agentify-cli",
   "version": "0.1.0",
   "description": "Agent Interface Compiler — One command. Every agent speaks your product.",
   "type": "module",
