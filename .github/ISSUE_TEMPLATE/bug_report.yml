@@ -16,7 +16,7 @@ body:
       label: Steps to Reproduce
       description: How can we reproduce this?
       placeholder: |
-        1. Run `npx @agentify/cli transform <url>`
+        1. Run `npx agentify-cli transform <url>`
         2. ...
     validations:
       required: true

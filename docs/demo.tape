@@ -1,35 +1,23 @@
 # Agentify Demo — Terminal Recording Script
 # Record with: vhs docs/demo.tape
-# Requires: brew install charmbracelet/tap/vhs ffmpeg ttyd
+# Requires: brew install charmbracelet/tap/vhs
 
 Output docs/demo.gif
 
-Set FontSize 16
-Set Width 900
-Set Height 500
+Set FontSize 15
+Set Width 880
+Set Height 520
 Set Theme "Catppuccin Mocha"
-Set Padding 20
-Set TypingSpeed 60ms
+Set Padding 16
+Set TypingSpeed 50ms
 
-# Title
-Type "# Agentify — Agent Interface Compiler"
+Type "# Transform any OpenAPI spec into an MCP Server"
 Enter
-Sleep 1s
+Sleep 600ms
 
-# Show the one-liner
-Type "npx @agentify/cli transform https://petstore.swagger.io/v2/swagger.json"
-Sleep 500ms
+Type "npx agentify-cli@0.1.3 transform https://petstore.swagger.io/v2/swagger.json"
+Sleep 300ms
 Enter
-Sleep 8s
+Sleep 25s
 
-# Show generated files
-Type "ls petstore-mcp-server/"
-Enter
-Sleep 2s
-
-Type "cat petstore-mcp-server/package.json | head -20"
-Enter
 Sleep 3s
-
-# Done
-Sleep 2s

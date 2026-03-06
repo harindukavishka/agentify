@@ -20,12 +20,9 @@ Agentify transforms any OpenAPI specification into a complete suite of agent int
 npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
 ```
 
-<!-- TODO: Replace with actual demo GIF recorded via VHS -->
-<!--
 <p align="center">
-  <img src="docs/demo.gif" alt="Agentify demo" width="600">
+  <img src="docs/demo.gif" alt="Agentify demo — transform OpenAPI to MCP Server in 30 seconds" width="700">
 </p>
--->
 
 ## The Problem
 
@@ -79,7 +76,7 @@ npx agentify-cli transform https://api.example.com/openapi.json -n my-project
 **Output:**
 
 ```
-  Agentify v0.1.0
+  Agentify v0.1.3
   Agent Interface Compiler
 
   +-- 20 endpoints detected -> SMALL API strategy
