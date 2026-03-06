@@ -343,6 +343,7 @@ function extractInputSchema(
       type: schema?.type?.toString() ?? "string",
       description: desc,
       required: param.required === true,
+      in: param.in as "path" | "query" | "header" | "cookie",
       format: schema?.format,
       enum: schema?.enum as string[] | undefined,
       default: schema?.default,
@@ -386,7 +387,7 @@ function extractRequestBodyProperties(
 
   const schema = mediaType.schema as OASSchema;
 
-  if (schema.type === "object" && schema.properties) {
+  if (schema.properties) {
     for (const [propName, propSchema] of Object.entries(schema.properties)) {
       const prop = propSchema as OASSchema;
       const { value: desc, warnings: w } = sanitizeDescription(
@@ -412,6 +413,33 @@ function extractRequestBodyProperties(
       if (isRequired) {
         required.push(propName);
       }
+    }
+  } else {
+    // Schema has no explicit properties — create a single "body" parameter
+    // so the agent knows to pass request body data.
+    // This covers: array types, objects without properties (e.g. additionalProperties),
+    // dereferenced $refs that resolve to non-object schemas, primitives, etc.
+    const schemaType = schema.type?.toString() ?? "object";
+    const { value: desc, warnings: w } = sanitizeDescription(
+      schema.description || body.description || `Request body (${schemaType})`,
+      `paths.${path}.${method}.requestBody.body`,
+      200,
+    );
+    warnings.push(...w);
+
+    const isBodyRequired = body.required === true;
+
+    properties.push({
+      name: "body",
+      type: schemaType,
+      description: desc,
+      required: isBodyRequired,
+      format: schema.format,
+      example: schema.example,
+    });
+
+    if (isBodyRequired) {
+      required.push("body");
     }
   }
 
