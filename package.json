@@ -1,5 +1,5 @@
 {
-  "name": "agentify",
+  "name": "@agentify/cli",
   "version": "0.1.0",
   "description": "Agent Interface Compiler — One command. Every agent speaks your product.",
   "type": "module",
@@ -31,10 +31,24 @@
     "ai",
     "skills",
     "agent-native",
-    "compiler"
+    "compiler",
+    "a2a",
+    "claude",
+    "cursor",
+    "copilot",
+    "llms-txt",
+    "agents-md"
   ],
-  "author": "",
+  "author": "Agentify Contributors",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koriyoshi2041/agentify.git"
+  },
+  "homepage": "https://github.com/koriyoshi2041/agentify#readme",
+  "bugs": {
+    "url": "https://github.com/koriyoshi2041/agentify/issues"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
