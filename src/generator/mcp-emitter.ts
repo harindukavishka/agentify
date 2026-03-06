@@ -7,6 +7,7 @@ import type {
   Emitter,
   EmitterOptions,
   EmitterResult,
+  SchemaProperty,
 } from "../types";
 import { scanMultipleFiles } from "../security/scanner";
 
@@ -81,8 +82,8 @@ export class MCPServerEmitter implements Emitter {
     const template = Handlebars.compile(TOOLS_TEMPLATE);
     const tools = ir.capabilities.map(cap => ({
       name: cap.name,
-      description: truncate(cap.agentDescription || cap.description, 200),
-      inputSchema: JSON.stringify(cap.input.jsonSchema ?? { type: "object", properties: {} }, null, 2),
+      description: escapeForJs(truncate(cap.agentDescription || cap.description, 200)),
+      zodShape: generateZodShape(cap),
     }));
     return template({ tools });
   }
@@ -137,11 +138,11 @@ export class MCPServerEmitter implements Emitter {
         },
         dependencies: {
           "@modelcontextprotocol/sdk": "^1.27.1",
+          "tsx": "^4.19.4",
           "zod": "^4.3.6",
         },
         devDependencies: {
           typescript: "^5.8.3",
-          tsx: "^4.19.4",
           "@types/node": "^22.15.2",
         },
       },
@@ -232,6 +233,72 @@ function toKebabCase(str: string): string {
     .toLowerCase();
 }
 
+function escapeForJs(str: string): string {
+  return str
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r");
+}
+
+function schemaPropertyToZod(prop: SchemaProperty, isRequired: boolean): string {
+  let zodType: string;
+
+  if (prop.enum && prop.enum.length > 0) {
+    zodType = `z.enum([${prop.enum.map(e => JSON.stringify(e)).join(", ")}])`;
+  } else {
+    switch (prop.type) {
+      case "string":
+        zodType = "z.string()";
+        break;
+      case "integer":
+      case "number":
+        zodType = "z.number()";
+        break;
+      case "boolean":
+        zodType = "z.boolean()";
+        break;
+      case "array":
+        zodType = "z.array(z.any())";
+        break;
+      case "object":
+        zodType = "z.record(z.string(), z.any())";
+        break;
+      default:
+        zodType = "z.any()";
+    }
+  }
+
+  if (prop.description) {
+    zodType += `.describe(${JSON.stringify(prop.description)})`;
+  }
+
+  if (!isRequired) {
+    zodType += ".optional()";
+  }
+
+  return zodType;
+}
+
+function generateZodShape(cap: Capability): string {
+  // Filter out header/cookie params — they are handled by auth config
+  const props = cap.input.properties.filter(
+    p => p.in !== "header" && p.in !== "cookie",
+  );
+  const requiredSet = new Set(cap.input.required);
+
+  if (props.length === 0) {
+    return "{}";
+  }
+
+  const lines = props.map(p => {
+    const isRequired = requiredSet.has(p.name);
+    return `    ${p.name}: ${schemaPropertyToZod(p, isRequired)}`;
+  });
+
+  return `{\n${lines.join(",\n")},\n  }`;
+}
+
 function extractPathParams(pathStr: string): string[] {
   const matches = pathStr.match(/\{(\w+)\}/g);
   return matches ? matches.map(m => m.slice(1, -1)) : [];
@@ -281,8 +348,8 @@ export function registerTools(server: McpServer): void {
 {{#each tools}}
   server.tool(
     "{{name}}",
-    "{{description}}",
-    {{{inputSchema}}},
+    "{{{description}}}",
+    {{{zodShape}}},
     async (params) => handleToolCall("{{name}}", params),
   );
 
@@ -296,6 +363,7 @@ const AUTH_KEY = process.env.{{authEnvVar}} ?? "";
 {{/if}}
 
 interface ToolResult {
+  [key: string]: unknown;
   content: Array<{ type: "text"; text: string }>;
   isError?: boolean;
 }
