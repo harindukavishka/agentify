@@ -40,21 +40,26 @@ function removeDangerousPatterns(input: string, fieldPath: string): Sanitization
   let cleaned = input;
 
   for (const pattern of DANGEROUS_CODE_PATTERNS) {
-    if (pattern.test(cleaned)) {
+    const replaced = cleaned.replace(pattern, "[REMOVED]");
+    if (replaced !== cleaned) {
       warnings.push(`[SECURITY] Removed dangerous code pattern in ${fieldPath}: ${pattern.source}`);
-      cleaned = cleaned.replace(pattern, "[REMOVED]");
+      cleaned = replaced;
     }
   }
 
-  if (HANDLEBARS_PATTERN.test(cleaned)) {
-    warnings.push(`[SECURITY] Removed Handlebars expression in ${fieldPath}`);
-    cleaned = cleaned.replace(HANDLEBARS_PATTERN, "[REMOVED]");
+  {
+    const replaced = cleaned.replace(HANDLEBARS_PATTERN, "[REMOVED]");
+    if (replaced !== cleaned) {
+      warnings.push(`[SECURITY] Removed Handlebars expression in ${fieldPath}`);
+      cleaned = replaced;
+    }
   }
 
   for (const pattern of PROMPT_INJECTION_PATTERNS) {
-    if (pattern.test(cleaned)) {
+    const replaced = cleaned.replace(pattern, "[REMOVED]");
+    if (replaced !== cleaned) {
       warnings.push(`[SECURITY] Removed prompt injection pattern in ${fieldPath}: ${pattern.source}`);
-      cleaned = cleaned.replace(pattern, "[REMOVED]");
+      cleaned = replaced;
     }
   }
 
