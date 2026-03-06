@@ -112,7 +112,7 @@ npx @agentify/cli transform https://api.example.com/openapi.json -n my-project
 - TypeScript source with full type safety
 - Dockerfile for containerized deployment
 - Environment variable configuration (.env.example)
-- Express-based HTTP transport
+- Stdio transport (standard MCP protocol)
 
 ## Output Format Status
 
@@ -129,7 +129,7 @@ npx @agentify/cli transform https://api.example.com/openapi.json -n my-project
 ## How It Works
 
 ```
-1. PARSE        OpenAPI 3.0/3.1 spec (URL or file)
+1. PARSE        OpenAPI 3.x / Swagger 2.0 spec (URL or file)
                   |
 2. SANITIZE     Strip dangerous patterns from all spec fields
                   |
