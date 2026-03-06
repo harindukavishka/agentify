@@ -2,10 +2,26 @@ import { Command } from "commander";
 import chalk from "chalk";
 import ora from "ora";
 import * as path from "node:path";
+import * as fs from "node:fs";
+import { fileURLToPath } from "node:url";
 import { parseOpenAPI } from "./parser/index";
 import { generateMCPServer } from "./generator/index";
 
-const VERSION = "0.1.0";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function readVersion(): string {
+  // Walk up from dist/ or src/ to find package.json
+  for (const rel of ["../package.json", "../../package.json"]) {
+    const p = path.resolve(__dirname, rel);
+    try {
+      const pkg = JSON.parse(fs.readFileSync(p, "utf-8"));
+      return pkg.version ?? "0.0.0";
+    } catch { /* try next */ }
+  }
+  return "0.0.0";
+}
+
+const VERSION = readVersion();
 
 const program = new Command();
 
@@ -19,8 +35,6 @@ program
   .description("Transform an OpenAPI spec into agent interfaces")
   .option("-o, --output <dir>", "Output directory")
   .option("-n, --name <name>", "Project name override")
-  .option("-f, --format <formats...>", "Output formats", ["mcp"])
-  .option("--overwrite", "Overwrite existing output directory", false)
   .action(async (input: string, opts: TransformOptions) => {
     await runTransform(input, opts);
   });
@@ -30,8 +44,6 @@ program
   .argument("[input]", "OpenAPI spec URL or file path")
   .option("-o, --output <dir>", "Output directory")
   .option("-n, --name <name>", "Project name override")
-  .option("-f, --format <formats...>", "Output formats", ["mcp"])
-  .option("--overwrite", "Overwrite existing output directory", false)
   .action(async (input: string | undefined, opts: TransformOptions) => {
     if (!input) {
       program.help();
@@ -45,8 +57,6 @@ program
 interface TransformOptions {
   output?: string;
   name?: string;
-  format: string[];
-  overwrite: boolean;
 }
 
 async function runTransform(input: string, opts: TransformOptions): Promise<void> {
