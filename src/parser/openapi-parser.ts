@@ -66,35 +66,64 @@ function extractProductMeta(api: OASDocument, warnings: string[]): ProductMeta {
 
   const baseUrl = extractBaseUrl(api);
 
+  const { value: version, warnings: verWarns } = sanitizeSpecField(
+    api.info.version || "0.0.0",
+    "info.version",
+  );
+  warnings.push(...verWarns);
+
+  const { value: docsUrl, warnings: docsWarns } = sanitizeSpecField(
+    (api.externalDocs as OpenAPIV3.ExternalDocumentationObject | undefined)?.url ?? "",
+    "externalDocs.url",
+  );
+  warnings.push(...docsWarns);
+
+  const { value: contactEmail, warnings: contactWarns } = sanitizeSpecField(
+    api.info.contact?.email ?? "",
+    "info.contact.email",
+  );
+  warnings.push(...contactWarns);
+
+  const { value: license, warnings: licenseWarns } = sanitizeSpecField(
+    api.info.license?.name ?? "",
+    "info.license.name",
+  );
+  warnings.push(...licenseWarns);
+
   return {
     name,
     description,
-    version: api.info.version || "0.0.0",
+    version,
     baseUrl,
-    docsUrl: (api.externalDocs as OpenAPIV3.ExternalDocumentationObject | undefined)?.url,
-    contactEmail: api.info.contact?.email,
-    license: api.info.license?.name,
+    docsUrl: docsUrl || undefined,
+    contactEmail: contactEmail || undefined,
+    license: license || undefined,
   };
 }
 
 function extractBaseUrl(api: OASDocument): string {
+  let raw: string;
+
   // OAS 3.x: use servers array
   if (api.servers && api.servers.length > 0) {
-    const server = api.servers[0];
-    return server?.url ?? "http://localhost:3000";
+    raw = api.servers[0]?.url ?? "http://localhost:3000";
+  } else {
+    // Swagger 2.0: construct from host + basePath + schemes
+    const swagger2 = api as Record<string, unknown>;
+    if (typeof swagger2["host"] === "string") {
+      const host = swagger2["host"] as string;
+      const basePath = (swagger2["basePath"] as string) ?? "";
+      const schemes = swagger2["schemes"] as string[] | undefined;
+      const scheme = schemes && schemes.length > 0 ? schemes[0] : "https";
+      raw = `${scheme}://${host}${basePath}`;
+    } else {
+      return "http://localhost:3000";
+    }
   }
 
-  // Swagger 2.0: construct from host + basePath + schemes
-  const swagger2 = api as Record<string, unknown>;
-  if (typeof swagger2["host"] === "string") {
-    const host = swagger2["host"] as string;
-    const basePath = (swagger2["basePath"] as string) ?? "";
-    const schemes = swagger2["schemes"] as string[] | undefined;
-    const scheme = schemes && schemes.length > 0 ? schemes[0] : "https";
-    return `${scheme}://${host}${basePath}`;
-  }
-
-  return "http://localhost:3000";
+  // Sanitize to prevent code injection via crafted server URLs
+  const { value } = sanitizeSpecField(raw, "servers[0].url");
+  return value;
 }
 
 function extractAuthConfig(api: OASDocument, warnings: string[]): AuthConfig {
