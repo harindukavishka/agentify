@@ -89,23 +89,28 @@ export class MCPServerEmitter implements Emitter {
 
   private generateToolHandlers(ir: AgentifyIR): string {
     const template = Handlebars.compile(HANDLERS_TEMPLATE);
-    const tools = ir.capabilities.map(cap => ({
-      name: cap.name,
-      method: cap.http.method.toUpperCase(),
-      path: cap.http.path,
-      baseUrl: cap.http.baseUrl,
-      hasBody: cap.http.method !== "get" && cap.http.method !== "delete" && cap.http.method !== "head",
-      contentType: cap.http.contentType ?? "application/json",
-      pathParams: extractPathParams(cap.http.path),
-      queryParams: cap.input.properties
+    const tools = ir.capabilities.map(cap => {
+      const queryParams = cap.input.properties
         .filter(p => !cap.http.path.includes(`{${p.name}}`))
         .filter(p => cap.http.method === "get" || isQueryParam(p.name, cap))
-        .map(p => p.name),
-      bodyParams: cap.input.properties
+        .map(p => p.name);
+      const bodyParams = cap.input.properties
         .filter(p => !cap.http.path.includes(`{${p.name}}`))
         .filter(p => cap.http.method !== "get" && !isQueryParam(p.name, cap))
-        .map(p => p.name),
-    }));
+        .map(p => p.name);
+      return {
+        name: cap.name,
+        method: cap.http.method.toUpperCase(),
+        path: cap.http.path,
+        baseUrl: cap.http.baseUrl,
+        hasBody: cap.http.method !== "get" && cap.http.method !== "delete" && cap.http.method !== "head",
+        contentType: cap.http.contentType ?? "application/json",
+        pathParams: extractPathParams(cap.http.path),
+        queryParams,
+        bodyParams,
+        queryParamNames: JSON.stringify(queryParams),
+      };
+    });
 
     return template({
       tools,
@@ -233,7 +238,13 @@ function extractPathParams(pathStr: string): string[] {
 }
 
 function isQueryParam(paramName: string, cap: Capability): boolean {
-  return cap.http.path.includes(`{${paramName}}`) === false
+  const prop = cap.input.properties.find(p => p.name === paramName);
+  // If the IR has explicit location info, use it
+  if (prop?.in) {
+    return prop.in === "query";
+  }
+  // Fallback: for GET/DELETE/HEAD, all non-path params are query params
+  return !cap.http.path.includes(`{${paramName}}`)
     && (cap.http.method === "get" || cap.http.method === "delete" || cap.http.method === "head");
 }
 
@@ -325,6 +336,7 @@ async function apiRequest(
   method: string,
   path: string,
   params?: Record<string, unknown>,
+  queryParamNames?: ReadonlyArray<string>,
 ): Promise<unknown> {
   let url = BASE_URL + path;
 
@@ -341,12 +353,21 @@ async function apiRequest(
     }
   }
 
-  // Add query parameters for GET/DELETE/HEAD requests
-  if (params && (method === "GET" || method === "DELETE" || method === "HEAD")) {
+  // Build query string from params that are explicitly query params
+  // For GET/DELETE/HEAD: all non-path params are query params
+  // For POST/PUT/PATCH: only params listed in queryParamNames are query params
+  const queryKeys = new Set<string>();
+  if (params) {
+    const isBodyMethod = method !== "GET" && method !== "DELETE" && method !== "HEAD";
     const queryEntries: string[] = [];
     for (const [key, value] of Object.entries(params)) {
-      if (!usedKeys.has(key) && value !== undefined) {
+      if (usedKeys.has(key) || value === undefined) continue;
+      const isQuery = isBodyMethod
+        ? (queryParamNames ?? []).includes(key)
+        : true;
+      if (isQuery) {
         queryEntries.push(\`\${encodeURIComponent(key)}=\${encodeURIComponent(String(value))}\`);
+        queryKeys.add(key);
       }
     }
     if (queryEntries.length > 0) {
@@ -385,10 +406,10 @@ async function apiRequest(
   };
 
   if (method !== "GET" && method !== "DELETE" && method !== "HEAD" && params) {
-    // Separate path params from body params
+    // Body = all params that are NOT path params and NOT query params
     const bodyParams: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(params)) {
-      if (!usedKeys.has(key)) {
+      if (!usedKeys.has(key) && !queryKeys.has(key)) {
         bodyParams[key] = value;
       }
     }
@@ -414,7 +435,7 @@ async function apiRequest(
 const HANDLERS: Record<string, (params: Record<string, unknown>) => Promise<ToolResult>> = {
 {{#each tools}}
   "{{name}}": async (params) => {
-    const result = await apiRequest("{{method}}", "{{path}}", params);
+    const result = await apiRequest("{{method}}", "{{path}}", params, {{{queryParamNames}}});
     return successResult(result);
   },
 {{/each}}
