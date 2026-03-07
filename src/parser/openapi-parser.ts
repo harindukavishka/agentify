@@ -358,6 +358,25 @@ function extractInputSchema(
   for (const param of parameters) {
     if (!param.name) continue;
 
+    // Swagger 2.0: body parameters carry a full schema with properties.
+    // Expand them the same way OAS 3.x requestBody is handled.
+    if (param.in === "body") {
+      const bodySchema = (param as unknown as { schema?: OASSchema }).schema;
+      if (bodySchema) {
+        const bodyResult = extractSwagger2BodyProperties(
+          bodySchema,
+          param.required === true,
+          param.description || "",
+          warnings,
+          path,
+          method,
+        );
+        properties.push(...bodyResult.properties);
+        required.push(...bodyResult.required);
+      }
+      continue;
+    }
+
     const { value: desc, warnings: w } = sanitizeDescription(
       param.description || "",
       `paths.${path}.${method}.parameters.${param.name}`,
@@ -470,6 +489,73 @@ function extractRequestBodyProperties(
     });
 
     if (isBodyRequired) {
+      required.push("body");
+    }
+  }
+
+  return { properties, required };
+}
+
+function extractSwagger2BodyProperties(
+  schema: OASSchema,
+  paramRequired: boolean,
+  paramDescription: string,
+  warnings: string[],
+  path: string,
+  method: string,
+): { properties: SchemaProperty[]; required: string[] } {
+  const properties: SchemaProperty[] = [];
+  const required: string[] = [];
+
+  if (schema.properties) {
+    for (const [propName, propSchema] of Object.entries(schema.properties)) {
+      const prop = propSchema as OASSchema;
+      const { value: desc, warnings: w } = sanitizeDescription(
+        prop.description || "",
+        `paths.${path}.${method}.body.${propName}`,
+        200,
+      );
+      warnings.push(...w);
+
+      const isRequired = (schema.required ?? []).includes(propName);
+
+      properties.push({
+        name: propName,
+        type: prop.type?.toString() ?? "string",
+        description: desc,
+        required: isRequired,
+        in: "body",
+        format: prop.format,
+        enum: prop.enum as string[] | undefined,
+        default: prop.default,
+        example: prop.example,
+      });
+
+      if (isRequired) {
+        required.push(propName);
+      }
+    }
+  } else {
+    // No explicit properties — create a single "body" parameter
+    const schemaType = schema.type?.toString() ?? "object";
+    const { value: desc, warnings: w } = sanitizeDescription(
+      schema.description || paramDescription || `Request body (${schemaType})`,
+      `paths.${path}.${method}.body`,
+      200,
+    );
+    warnings.push(...w);
+
+    properties.push({
+      name: "body",
+      type: schemaType,
+      description: desc,
+      required: paramRequired,
+      in: "body",
+      format: schema.format,
+      example: schema.example,
+    });
+
+    if (paramRequired) {
       required.push("body");
     }
   }

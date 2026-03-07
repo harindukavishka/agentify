@@ -2,15 +2,30 @@ import type { AgentifyIR, Emitter, EmitterResult } from "../types";
 import { MCPServerEmitter } from "./mcp-emitter";
 import { ClaudeMdEmitter } from "./claudemd-emitter";
 import { AgentsMdEmitter } from "./agentsmd-emitter";
+import { CursorRulesEmitter } from "./cursorrules-emitter";
+import { LlmsTxtEmitter } from "./llmstxt-emitter";
+import { GeminiMdEmitter } from "./geminimd-emitter";
+import { SkillsEmitter } from "./skills-emitter";
+import { A2ACardEmitter } from "./a2a-emitter";
 
 export { MCPServerEmitter } from "./mcp-emitter";
 export { ClaudeMdEmitter } from "./claudemd-emitter";
 export { AgentsMdEmitter } from "./agentsmd-emitter";
+export { CursorRulesEmitter } from "./cursorrules-emitter";
+export { LlmsTxtEmitter } from "./llmstxt-emitter";
+export { GeminiMdEmitter } from "./geminimd-emitter";
+export { SkillsEmitter } from "./skills-emitter";
+export { A2ACardEmitter } from "./a2a-emitter";
 
 const EMITTERS: Record<string, () => Emitter> = {
   mcp: () => new MCPServerEmitter(),
   "claude.md": () => new ClaudeMdEmitter(),
   "agents.md": () => new AgentsMdEmitter(),
+  cursorrules: () => new CursorRulesEmitter(),
+  "llms.txt": () => new LlmsTxtEmitter(),
+  "gemini.md": () => new GeminiMdEmitter(),
+  skills: () => new SkillsEmitter(),
+  a2a: () => new A2ACardEmitter(),
 };
 
 export function getAvailableFormats(): string[] {

@@ -35,7 +35,7 @@ program
   .description("Transform an OpenAPI spec into agent interfaces")
   .option("-o, --output <dir>", "Output directory")
   .option("-n, --name <name>", "Project name override")
-  .option("-f, --format <formats...>", "Output formats (mcp, claude.md, agents.md)", ["mcp", "claude.md", "agents.md"])
+  .option("-f, --format <formats...>", "Output formats (mcp, claude.md, agents.md, cursorrules, llms.txt, gemini.md, skills, a2a)", ["mcp", "claude.md", "agents.md", "cursorrules", "llms.txt", "gemini.md", "skills", "a2a"])
   .action(async (input: string, opts: TransformOptions) => {
     await runTransform(input, opts);
   });

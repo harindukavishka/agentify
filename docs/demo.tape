@@ -11,11 +11,11 @@ Set Theme "Catppuccin Mocha"
 Set Padding 16
 Set TypingSpeed 50ms
 
-Type "# Transform any OpenAPI spec into MCP Server + CLAUDE.md + AGENTS.md"
+Type "# Transform any OpenAPI spec into 8 agent interface formats"
 Enter
 Sleep 600ms
 
-Type "npx -y agentify-cli@0.2.0 transform https://petstore.swagger.io/v2/swagger.json"
+Type "npx -y agentify-cli@0.3.0 transform https://petstore.swagger.io/v2/swagger.json"
 Sleep 300ms
 Enter
 Sleep 25s

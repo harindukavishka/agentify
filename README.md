@@ -14,7 +14,7 @@
 
 ---
 
-Agentify compiles any OpenAPI specification into agent interfaces — MCP Server, CLAUDE.md, and AGENTS.md today, with more formats coming. Instead of hand-building each format separately, generate them all from a single source of truth.
+Agentify compiles any OpenAPI specification into **8 agent interface formats** — MCP Server, CLAUDE.md, AGENTS.md, .cursorrules, Skills, llms.txt, GEMINI.md, and A2A Card. Instead of hand-building each format separately, generate them all from a single source of truth.
 
 ```bash
 npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
@@ -36,9 +36,10 @@ AI agents are the new users of your API. But making your product agent-accessibl
 | .cursorrules | Cursor IDE | Write from scratch |
 | Skills | 30+ agent platforms | Per-platform work |
 | llms.txt | LLM search engines | Manual authoring |
+| GEMINI.md | Gemini CLI | Write from scratch |
 | A2A Card | Google Agent-to-Agent protocol | JSON schema work |
 
-**That's 7+ formats to build, test, and keep in sync.** Every API change means updating all of them.
+**That's 8+ formats to build, test, and keep in sync.** Every API change means updating all of them.
 
 ## The Solution
 
@@ -49,13 +50,15 @@ Agentify is a compiler. OpenAPI in, every agent format out.
                     |
                     +---> CLAUDE.md
                     |
-OpenAPI Spec -----> +---> AGENTS.md
+                    +---> AGENTS.md
                     |
-                    +---> .cursorrules
+OpenAPI Spec -----> +---> .cursorrules
                     |
                     +---> Skills
                     |
                     +---> llms.txt
+                    |
+                    +---> GEMINI.md
                     |
                     +---> A2A Card
 ```
@@ -79,7 +82,7 @@ npx agentify-cli transform ./my-api.yaml -f mcp claude.md
 **Output:**
 
 ```
-  Agentify v0.2.0
+  Agentify v0.3.0
   Agent Interface Compiler
 
   +-- 20 endpoints detected -> SMALL API strategy
@@ -87,8 +90,8 @@ npx agentify-cli transform ./my-api.yaml -f mcp claude.md
   +-- Auth: apiKey (SWAGGER_PETSTORE_API_KEY)
   +-- Strategy: Direct tool mapping — one tool per endpoint
 
-  > Generated mcp + claude.md + agents.md (10 files)
-  > Output: ./petstore-mcp-server
+  > Generated mcp + claude.md + agents.md + cursorrules + llms.txt + gemini.md + skills + a2a (15 files)
+  > Output: ./swagger-petstore-mcp-server
   > Security scan: PASSED
 ```
 
@@ -120,11 +123,12 @@ npx agentify-cli transform ./my-api.yaml -f mcp claude.md
 |--------|--------|-------------|
 | MCP Server | Available | Full server with tools, handlers, Dockerfile |
 | CLAUDE.md | Available | Project context for Claude Code |
-| AGENTS.md | Available | Universal agent instructions |
-| .cursorrules | Planned | Cursor IDE agent rules |
-| Skills | Planned | Agent instruction files for 30+ platforms |
-| llms.txt | Planned | LLM-readable documentation |
-| A2A Card | Planned | Google Agent-to-Agent discovery |
+| AGENTS.md | Available | Universal agent instructions (Linux Foundation standard) |
+| .cursorrules | Available | Cursor IDE agent rules |
+| Skills | Available | Structured capability file for agent platforms |
+| llms.txt | Available | LLM-readable condensed documentation |
+| GEMINI.md | Available | Gemini CLI project context |
+| A2A Card | Available | Google Agent-to-Agent discovery card |
 
 ## How It Works
 
@@ -184,7 +188,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 ## Roadmap
 
 - [x] **M0: Foundation** — OpenAPI parser, MCP emitter, security scanner, CLI
-- [ ] **M1: Multi-Format** — ~~CLAUDE.md~~, ~~AGENTS.md~~, Skills, .cursorrules, llms.txt, A2A
+- [x] **M1: Multi-Format** — ~~CLAUDE.md~~, ~~AGENTS.md~~, ~~Skills~~, ~~.cursorrules~~, ~~llms.txt~~, ~~GEMINI.md~~, ~~A2A Card~~
 - [ ] **M2: Intelligence** — Capability graph, semantic grouping, context optimization
 - [ ] **M3: Self-Serve** — Web UI, one-click deploy, registry integrations
 - [ ] **M4: Scale** — Enterprise features, custom emitters, CI/CD integration
@@ -194,12 +198,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 | Feature | Agentify | Speakeasy | Stainless | openapi-to-skills |
 |---------|----------|-----------|-----------|-------------------|
 | MCP Server | Yes | Yes | No | No |
-| Skills | Planned | CLI only | No | Yes |
+| Skills | Yes | CLI only | No | Yes |
 | CLAUDE.md | Yes | No | No | No |
 | AGENTS.md | Yes | No | No | No |
-| .cursorrules | Planned | No | No | No |
-| llms.txt | Planned | Yes | No | No |
-| A2A Card | Planned | No | No | No |
+| .cursorrules | Yes | No | No | No |
+| llms.txt | Yes | Yes | No | No |
+| GEMINI.md | Yes | No | No | No |
+| A2A Card | Yes | No | No | No |
 | Context-aware strategy | Yes | No | Yes | No |
 | Security scanning | Yes | Unknown | Unknown | No |
 | Open source | MIT | No | No | MIT |
