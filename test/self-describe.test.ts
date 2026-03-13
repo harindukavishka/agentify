@@ -24,7 +24,7 @@ describe("Self-Description Files", () => {
       );
       const match = content.match(/description:\s*(.+)/);
       expect(match).not.toBeNull();
-      expect(match![1]).toContain("agent interface formats");
+      expect(match![1]).toContain("agent-consumable formats");
     });
 
     it("contains the transform command usage", () => {
@@ -48,13 +48,13 @@ describe("Self-Description Files", () => {
       }
     });
 
-    it("includes examples section", () => {
+    it("includes common user requests for natural interaction", () => {
       const content = fs.readFileSync(
         path.join(SELF_DIR, "agentify.md"),
         "utf-8",
       );
-      expect(content).toContain("## Examples");
-      expect(content).toContain("petstore.swagger.io");
+      expect(content).toContain("## Common User Requests");
+      expect(content).toContain("## What You Should Do");
     });
   });
 

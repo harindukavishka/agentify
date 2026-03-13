@@ -1,13 +1,16 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="Agentify — Agent Interface Compiler" width="800">
+<h1>Agentify</h1>
+<p><strong>Agent Interface Compiler</strong> — One command. Every agent speaks your product.</p>
+
+<img src="assets/banner.svg" alt="Agentify — OpenAPI to 9 agent interface formats" width="800">
 
 <br>
 
-<a href="https://www.npmjs.com/package/agentify-cli"><img src="https://img.shields.io/npm/v/agentify-cli?color=cb3837&logo=npm" alt="npm"></a>
-<a href="https://github.com/koriyoshi2041/agentify/actions"><img src="https://img.shields.io/github/actions/workflow/status/koriyoshi2041/agentify/ci.yml?logo=github" alt="CI"></a>
-<a href="https://github.com/koriyoshi2041/agentify/blob/main/LICENSE"><img src="https://img.shields.io/github/license/koriyoshi2041/agentify" alt="MIT License"></a>
-<a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white" alt="TypeScript"></a>
+<a href="https://www.npmjs.com/package/agentify-cli"><img src="https://img.shields.io/npm/v/agentify-cli?color=cb3837&logo=npm&style=flat-square" alt="npm"></a>
+<a href="https://github.com/koriyoshi2041/agentify/actions"><img src="https://img.shields.io/github/actions/workflow/status/koriyoshi2041/agentify/ci.yml?logo=github&style=flat-square" alt="CI"></a>
+<a href="https://github.com/koriyoshi2041/agentify/blob/main/LICENSE"><img src="https://img.shields.io/github/license/koriyoshi2041/agentify?style=flat-square" alt="MIT License"></a>
+<a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white&style=flat-square" alt="TypeScript"></a>
 
 </div>
 
