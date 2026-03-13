@@ -7,6 +7,7 @@ import { LlmsTxtEmitter } from "./llmstxt-emitter";
 import { GeminiMdEmitter } from "./geminimd-emitter";
 import { SkillsEmitter } from "./skills-emitter";
 import { A2ACardEmitter } from "./a2a-emitter";
+import { CLIEmitter } from "./cli-emitter";
 
 export { MCPServerEmitter } from "./mcp-emitter";
 export { ClaudeMdEmitter } from "./claudemd-emitter";
@@ -16,6 +17,7 @@ export { LlmsTxtEmitter } from "./llmstxt-emitter";
 export { GeminiMdEmitter } from "./geminimd-emitter";
 export { SkillsEmitter } from "./skills-emitter";
 export { A2ACardEmitter } from "./a2a-emitter";
+export { CLIEmitter } from "./cli-emitter";
 
 const EMITTERS: Record<string, () => Emitter> = {
   mcp: () => new MCPServerEmitter(),
@@ -26,6 +28,7 @@ const EMITTERS: Record<string, () => Emitter> = {
   "gemini.md": () => new GeminiMdEmitter(),
   skills: () => new SkillsEmitter(),
   a2a: () => new A2ACardEmitter(),
+  cli: () => new CLIEmitter(),
 };
 
 export function getAvailableFormats(): string[] {

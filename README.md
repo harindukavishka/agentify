@@ -14,7 +14,7 @@
 
 ---
 
-Agentify compiles any OpenAPI specification into **8 agent interface formats** — MCP Server, CLAUDE.md, AGENTS.md, .cursorrules, Skills, llms.txt, GEMINI.md, and A2A Card. Instead of hand-building each format separately, generate them all from a single source of truth.
+Agentify compiles any OpenAPI specification into **9 agent interface formats** — MCP Server, CLAUDE.md, AGENTS.md, .cursorrules, Skills, llms.txt, GEMINI.md, A2A Card, and CLI. Instead of hand-building each format separately, generate them all from a single source of truth.
 
 ```bash
 npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
@@ -38,8 +38,9 @@ AI agents are the new users of your API. But making your product agent-accessibl
 | llms.txt | LLM search engines | Manual authoring |
 | GEMINI.md | Gemini CLI | Write from scratch |
 | A2A Card | Google Agent-to-Agent protocol | JSON schema work |
+| CLI | Developers, scripts, CI/CD | Build from scratch |
 
-**That's 8+ formats to build, test, and keep in sync.** Every API change means updating all of them.
+**That's 9+ formats to build, test, and keep in sync.** Every API change means updating all of them.
 
 ## The Solution
 
@@ -61,6 +62,8 @@ OpenAPI Spec -----> +---> .cursorrules
                     +---> GEMINI.md
                     |
                     +---> A2A Card
+                    |
+                    +---> CLI (standalone command-line tool)
 ```
 
 ## Quick Start
@@ -77,12 +80,18 @@ npx agentify-cli transform https://api.example.com/openapi.json -n my-project
 
 # Generate only specific formats
 npx agentify-cli transform ./my-api.yaml -f mcp claude.md
+
+# Generate a standalone CLI tool from your API
+npx agentify-cli transform ./my-api.yaml -f cli -o my-api-cli
+
+# Get Agentify's own agent interface files (self-describe)
+npx agentify-cli self-describe -o .
 ```
 
 **Output:**
 
 ```
-  Agentify v0.3.0
+  Agentify v0.4.0
   Agent Interface Compiler
 
   +-- 20 endpoints detected -> SMALL API strategy
@@ -129,6 +138,7 @@ npx agentify-cli transform ./my-api.yaml -f mcp claude.md
 | llms.txt | Available | LLM-readable condensed documentation |
 | GEMINI.md | Available | Gemini CLI project context |
 | A2A Card | Available | Google Agent-to-Agent discovery card |
+| CLI | Available | Standalone command-line tool (opt-in: `-f cli`) |
 
 ## How It Works
 
@@ -205,6 +215,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 | llms.txt | Yes | Yes | No | No |
 | GEMINI.md | Yes | No | No | No |
 | A2A Card | Yes | No | No | No |
+| CLI generation | Yes | No | No | No |
+| Self-as-Skills | Yes | No | No | No |
 | Context-aware strategy | Yes | No | Yes | No |
 | Security scanning | Yes | Unknown | Unknown | No |
 | Open source | MIT | No | No | MIT |

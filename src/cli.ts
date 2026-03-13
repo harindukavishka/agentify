@@ -35,7 +35,7 @@ program
   .description("Transform an OpenAPI spec into agent interfaces")
   .option("-o, --output <dir>", "Output directory")
   .option("-n, --name <name>", "Project name override")
-  .option("-f, --format <formats...>", "Output formats (mcp, claude.md, agents.md, cursorrules, llms.txt, gemini.md, skills, a2a)", ["mcp", "claude.md", "agents.md", "cursorrules", "llms.txt", "gemini.md", "skills", "a2a"])
+  .option("-f, --format <formats...>", "Output formats (mcp, claude.md, agents.md, cursorrules, llms.txt, gemini.md, skills, a2a, cli)", ["mcp", "claude.md", "agents.md", "cursorrules", "llms.txt", "gemini.md", "skills", "a2a"])
   .action(async (input: string, opts: TransformOptions) => {
     await runTransform(input, opts);
   });
@@ -145,6 +145,37 @@ function toKebabCase(str: string): string {
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .toLowerCase();
+}
+
+program
+  .command("self-describe")
+  .description("Output Agentify's own agent interface files (skills.json, CLAUDE.md, AGENTS.md)")
+  .option("-o, --output <dir>", "Output directory", ".")
+  .action(async (opts: { output: string }) => {
+    const selfDir = resolveSelfDir();
+    const outputDir = path.resolve(opts.output);
+    fs.mkdirSync(outputDir, { recursive: true });
+
+    const files = ["skills.json", "CLAUDE.md", "AGENTS.md"];
+    for (const file of files) {
+      const src = path.join(selfDir, file);
+      const dest = path.join(outputDir, file);
+      fs.copyFileSync(src, dest);
+      console.log(`  ${chalk.green("\u2713")} ${file}`);
+    }
+
+    console.log("");
+    console.log(chalk.dim("  Agent interface files for Agentify itself."));
+    console.log(chalk.dim("  Add these to your project so agents know how to use Agentify."));
+    console.log("");
+  });
+
+function resolveSelfDir(): string {
+  for (const rel of ["../self", "../../self"]) {
+    const p = path.resolve(__dirname, rel);
+    if (fs.existsSync(p)) return p;
+  }
+  throw new Error("Could not locate self-description files. Are you running from the npm package?");
 }
 
 program.parse();

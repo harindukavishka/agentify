@@ -20,7 +20,7 @@ Type "# Transform any OpenAPI spec into 8 agent interface formats"
 Enter
 Sleep 600ms
 
-Type "npx -y agentify-cli@0.3.0 transform https://petstore.swagger.io/v2/swagger.json"
+Type "npx -y agentify-cli@0.4.0 transform https://petstore.swagger.io/v2/swagger.json"
 Sleep 300ms
 Enter
 Sleep 35s
