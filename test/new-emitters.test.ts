@@ -127,9 +127,9 @@ describe(".cursorrules Emitter", () => {
 
     const content = await fs.readFile(path.join(outputDir, ".cursorrules"), "utf-8");
 
-    expect(content).toContain("## Important Rules");
-    expect(content).toContain("MCP server tools");
-    expect(content).toContain("documented schemas");
+    expect(content).toContain("## Code Generation Rules");
+    expect(content).toContain("fetch");
+    expect(content).toContain("Path parameters");
   });
 });
 
@@ -278,19 +278,19 @@ describe("GEMINI.md Emitter", () => {
 
     const content = await fs.readFile(path.join(outputDir, "GEMINI.md"), "utf-8");
 
-    expect(content).toContain("## MCP Integration");
+    expect(content).toContain("## Gemini CLI Integration");
     expect(content).toContain("Gemini CLI");
   });
 
-  it("contains usage notes with Gemini-specific tips", async () => {
+  it("contains endpoint reference with parameter details", async () => {
     const outputDir = path.join(TEST_OUTPUT_DIR, "geminimd-notes");
     const emitter = new GeminiMdEmitter();
     await emitter.emit(petstoreIR, { outputDir });
 
     const content = await fs.readFile(path.join(outputDir, "GEMINI.md"), "utf-8");
 
-    expect(content).toContain("## Usage Notes");
-    expect(content).toContain("MCP tools");
+    expect(content).toContain("## Endpoint Reference");
+    expect(content).toContain("**Parameters:**");
   });
 });
 
@@ -326,7 +326,7 @@ describe("Multi-format generation with new emitters", () => {
     expect(llmstxt).toContain("## Endpoints");
 
     const geminiMd = await fs.readFile(path.join(outputDir, "GEMINI.md"), "utf-8");
-    expect(geminiMd).toContain("## MCP Integration");
+    expect(geminiMd).toContain("## Gemini CLI Integration");
   });
 
   it("generates only new formats when specified", async () => {

@@ -332,7 +332,12 @@ function toSnakeCase(str: string): string {
 function inferOperationType(method: HttpMethod, path: string, operationId: string): OperationType {
   const lowerOp = operationId.toLowerCase();
 
+  // Name-based inference takes priority over method-based
+  if (lowerOp.includes("login") || lowerOp.includes("logout")) return "execute";
   if (lowerOp.includes("search") || lowerOp.includes("find") || lowerOp.includes("query")) return "search";
+  if (lowerOp.includes("update")) return "update";
+  if (lowerOp.includes("create") || lowerOp.includes("add")) return "create";
+  if (lowerOp.includes("delete") || lowerOp.includes("remove")) return "delete";
   if (lowerOp.includes("list") || lowerOp.includes("getall") || lowerOp.includes("get_all")) return "list";
 
   switch (method) {

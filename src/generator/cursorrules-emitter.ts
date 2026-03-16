@@ -70,20 +70,21 @@ function generateCursorRules(ir: AgentifyIR): string {
   }
   sections.push("");
 
-  // Important Rules
-  sections.push("## Important Rules");
+  // Code Generation Rules
+  sections.push("## Code Generation Rules");
   sections.push("");
-  sections.push("- Use the MCP server tools when interacting with this API");
-  sections.push("- All inputs must conform to the documented schemas");
-  sections.push("- Path parameters are automatically interpolated into URLs");
-  sections.push("- Query vs body parameter routing is handled automatically based on HTTP method");
+  sections.push(`- Base URL: \`${ir.product.baseUrl}\``);
+  sections.push("- Use `fetch` or `axios` for HTTP requests");
+  sections.push("- Path parameters: replace `{paramName}` in the URL path");
+  sections.push("- Query parameters: append as `?key=value` query string");
+  sections.push("- Body parameters: send as JSON in the request body with `Content-Type: application/json`");
   if (ir.auth.type !== "none") {
-    sections.push(`- Always ensure \`${ir.auth.envVariable}\` is set before making requests`);
+    sections.push(`- Authentication: read \`${ir.auth.envVariable}\` from environment and include in request headers`);
   }
 
   const sideEffectOps = ir.capabilities.filter(c => c.sideEffects);
   if (sideEffectOps.length > 0) {
-    sections.push(`- ${sideEffectOps.length} operations have side effects — confirm before executing`);
+    sections.push(`- ${sideEffectOps.length} operations have side effects (POST/PUT/DELETE) — confirm before executing`);
   }
   sections.push("");
 
@@ -101,11 +102,19 @@ function renderDomainSection(domain: Domain, caps: readonly Capability[]): strin
   }
 
   for (const cap of caps) {
-    const desc = truncate(cap.description, 100);
-    lines.push(`- ${cap.http.method.toUpperCase()} \`${cap.http.path}\` — ${desc}`);
+    lines.push(`#### ${cap.http.method.toUpperCase()} \`${cap.http.path}\` — ${truncate(cap.description, 100)}`);
+    lines.push("");
+    if (cap.input.properties.length > 0) {
+      for (const p of cap.input.properties) {
+        const req = p.required ? "required" : "optional";
+        const loc = p.in ?? "body";
+        const desc = p.description ? ` — ${p.description}` : "";
+        lines.push(`- \`${p.name}\` (${p.type}, ${req}, ${loc})${desc}`);
+      }
+      lines.push("");
+    }
   }
 
-  lines.push("");
   return lines;
 }
 

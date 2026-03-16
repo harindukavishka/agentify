@@ -92,11 +92,34 @@ function buildA2ACard(ir: AgentifyIR): A2ACard {
 }
 
 function capabilityToA2ASkill(cap: Capability): A2ASkill {
+  const examples: unknown[] = cap.examples.map(ex => ({
+    name: ex.name,
+    description: ex.description,
+    input: ex.input,
+  }));
+
+  // If no spec examples, generate a basic usage example from parameters
+  if (examples.length === 0 && cap.input.properties.length > 0) {
+    const sampleInput: Record<string, string> = {};
+    for (const p of cap.input.properties) {
+      if (p.required) {
+        sampleInput[p.name] = p.example != null ? String(p.example) : `<${p.type}>`;
+      }
+    }
+    if (Object.keys(sampleInput).length > 0) {
+      examples.push({
+        name: `${cap.name} example`,
+        description: cap.agentDescription,
+        input: sampleInput,
+      });
+    }
+  }
+
   return {
     id: cap.id,
     name: cap.name,
     description: cap.agentDescription,
     tags: [cap.domain, cap.operation],
-    examples: [],
+    examples,
   };
 }

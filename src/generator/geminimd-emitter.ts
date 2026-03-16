@@ -74,28 +74,45 @@ function generateGeminiMd(ir: AgentifyIR): string {
     sections.push(...renderDomainSection(domain, caps));
   }
 
-  // MCP Integration (Gemini-specific)
-  sections.push("## MCP Integration");
-  sections.push("");
-  sections.push("This API is available as an MCP server compatible with Gemini CLI.");
-  sections.push("The server exposes tools via stdio transport.");
-  sections.push("");
-  sections.push("```bash");
-  sections.push("npm start");
-  sections.push("```");
+  // Endpoint Reference with parameter details
+  sections.push("## Endpoint Reference");
   sections.push("");
 
-  // Usage Notes (Gemini-specific tips)
-  sections.push("## Usage Notes");
-  sections.push("");
-  sections.push("- Use MCP tools to interact with this API");
-  sections.push("- All inputs are validated with Zod schemas — check tool descriptions for required parameters");
-  sections.push("- Path parameters are automatically interpolated into URLs");
-  sections.push("- Query vs body parameter routing is handled automatically based on HTTP method");
-  if (ir.auth.type !== "none") {
-    sections.push(`- Authentication is handled via the \`${ir.auth.envVariable}\` environment variable`);
+  for (const cap of ir.capabilities) {
+    sections.push(`### \`${cap.name}\` — ${cap.http.method.toUpperCase()} \`${cap.http.path}\``);
+    sections.push("");
+    sections.push(cap.description);
+    sections.push("");
+    if (cap.input.properties.length > 0) {
+      sections.push("**Parameters:**");
+      sections.push("");
+      for (const p of cap.input.properties) {
+        const req = p.required ? "required" : "optional";
+        const loc = p.in ?? "body";
+        const desc = p.description ? ` — ${p.description}` : "";
+        sections.push(`- \`${p.name}\` (${p.type}, ${req}, ${loc})${desc}`);
+      }
+      sections.push("");
+    }
   }
-  sections.push("- Gemini CLI will automatically discover available MCP tools");
+
+  // Gemini CLI Integration
+  sections.push("## Gemini CLI Integration");
+  sections.push("");
+  sections.push("If an MCP server is generated alongside this file, add it to your Gemini CLI config:");
+  sections.push("");
+  sections.push("```json");
+  sections.push(`{`);
+  sections.push(`  "mcpServers": {`);
+  sections.push(`    "${ir.product.name.toLowerCase().replace(/\\s+/g, "-")}": {`);
+  sections.push(`      "command": "npx",`);
+  sections.push(`      "args": ["tsx", "src/index.ts"]`);
+  sections.push(`    }`);
+  sections.push(`  }`);
+  sections.push(`}`);
+  sections.push("```");
+  sections.push("");
+  sections.push("Gemini CLI will automatically discover the tools exposed by the MCP server.");
   sections.push("");
 
   return sections.join("\n");

@@ -81,11 +81,32 @@ function generateClaudeMd(ir: AgentifyIR): string {
   sections.push(`- **Approach:** ${ir.strategy.reason}`);
   sections.push("");
 
+  // Endpoint Reference with parameter details
+  sections.push("## Endpoint Reference");
+  sections.push("");
+
+  for (const cap of ir.capabilities) {
+    sections.push(`### \`${cap.name}\` — ${cap.http.method.toUpperCase()} \`${cap.http.path}\``);
+    sections.push("");
+    sections.push(cap.description);
+    sections.push("");
+    if (cap.input.properties.length > 0) {
+      sections.push("**Parameters:**");
+      sections.push("");
+      for (const p of cap.input.properties) {
+        const req = p.required ? "required" : "optional";
+        const loc = p.in ?? "body";
+        const desc = p.description ? ` — ${p.description}` : "";
+        sections.push(`- \`${p.name}\` (${p.type}, ${req}, ${loc})${desc}`);
+      }
+      sections.push("");
+    }
+  }
+
   // Usage hints for Claude
   sections.push("## Usage Notes");
   sections.push("");
-  sections.push("- Use the MCP tools provided by this server to interact with the API");
-  sections.push("- All inputs are validated with Zod schemas — check tool descriptions for required parameters");
+  sections.push("- All inputs are validated — check parameter details above for required fields");
   sections.push("- Path parameters are automatically interpolated into URLs");
   sections.push("- Query vs body parameter routing is handled automatically based on HTTP method");
   if (ir.auth.type !== "none") {

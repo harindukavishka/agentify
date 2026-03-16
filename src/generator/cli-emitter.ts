@@ -257,7 +257,15 @@ function generateCommands(ir: AgentifyIR): string {
 
     for (const param of flagParams) {
       const isNum = param.type === "integer" || param.type === "number";
-      const coerce = isNum ? `Number(options.${param.name})` : `options.${param.name}`;
+      const isComplex = param.type === "object" || param.type === "array";
+      let coerce: string;
+      if (isNum) {
+        coerce = `Number(options.${param.name})`;
+      } else if (isComplex) {
+        coerce = `JSON.parse(options.${param.name})`;
+      } else {
+        coerce = `options.${param.name}`;
+      }
       lines.push(`        if (options.${param.name} !== undefined) params["${param.name}"] = ${coerce};`);
     }
 
